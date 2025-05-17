@@ -89,13 +89,17 @@ const updatePost = asyncHandler(async (req, res) => {
 
   console.log(post);
 
-  if (req.user.role === "reader") {
-    throw new ApiError(403, "Readers are not authorized to update posts");
-  }
+  //   if (req.user.role === "reader") {
+  //     throw new ApiError(403, "Readers are not authorized to update posts");
+  //   }
 
   //   if (post.author.toString() !== authorId && req.user?.role !== "admin") {
   //     throw new ApiError(403, "You are not authorized to update this post");
   //   }
+
+  if (post.author.toString() !== req.user._id.toString()) {
+    throw new ApiError(403, "You are not authorized to update this post");
+  }
 
   const updatedPost = await Post.findByIdAndUpdate(
     postId,
@@ -116,13 +120,17 @@ const deletePost = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Post not found");
   }
 
-  if (req.user.role === "reader") {
-    throw new ApiError(403, "Readers are not authorized to update posts");
-  }
+  //   if (req.user.role === "reader") {
+  //     throw new ApiError(403, "Readers are not authorized to update posts");
+  //   }
 
   //   if (post.author.toString() !== authorId && req.user?.role !== "admin") {
   //     throw new ApiError(403, "You are not authorized to delete this post");
   //   }
+
+  if (post.author.toString() !== req.user._id.toString()) {
+    throw new ApiError(403, "You are not authorized to delete this post");
+  }
 
   await Post.findByIdAndDelete(postId);
 
