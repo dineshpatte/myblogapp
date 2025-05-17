@@ -37,14 +37,14 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (existedUser) {
-    throw new ApiError(402, "User already exists");
+    throw new ApiError(409, "User already exists");
   }
 
   const avatarLocalPath = req.files?.avatar?.[0]?.path;
   console.log("avatarLocalPath:", avatarLocalPath);
 
   if (!avatarLocalPath) {
-    throw new ApiError(402, "The avatar does not exist in local path");
+    throw new ApiError(404, "The avatar does not exist in local path");
   }
 
   let avatar;
@@ -52,7 +52,7 @@ const registerUser = asyncHandler(async (req, res) => {
     avatar = await uploadOnCloudinary(avatarLocalPath);
     console.log("uploadOnCloudinary response:", avatar);
     if (!avatar) {
-      throw new ApiError(402, "Avatar upload failed");
+      throw new ApiError(405, "Avatar upload failed");
     }
   } catch (error) {
     console.error("Error uploading avatar to Cloudinary:", error);
@@ -92,7 +92,7 @@ const loginUser = asyncHandler(async (req, res) => {
   }
   const isPassswordValid = await user.isPasswordCorrect(password);
   if (!isPassswordValid) {
-    throw new ApiError(402, "invalid password");
+    throw new ApiError(403, "invalid password");
   }
   console.log("password match:", isPassswordValid);
 
@@ -105,7 +105,7 @@ const loginUser = asyncHandler(async (req, res) => {
     "-password -refreshToken"
   );
   if (!loggedInUser) {
-    throw new ApiError(402, "user not available");
+    throw new ApiError(404, "user not available");
   }
 
   const options = {
