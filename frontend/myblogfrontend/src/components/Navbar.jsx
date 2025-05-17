@@ -11,7 +11,7 @@ function Navbar() {
           <Link to="/" className="hover:text-gray-300">
             Home
           </Link>
-          <Link to="/create" className="hover:text-gray-300">
+          <Link to="/create-post" className="hover:text-gray-300">
             Create Post
           </Link>
           <Link to="/myposts" className="hover:text-gray-300">

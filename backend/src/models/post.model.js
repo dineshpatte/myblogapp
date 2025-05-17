@@ -20,6 +20,10 @@ const postSchema = mongoose.Schema(
       enum: ["published", "draft"],
       default: "draft",
     },
+    thumbnail: {
+      type: String, // Cloudinary image URL
+      default: "",
+    },
   },
   { timestamps: true }
 );

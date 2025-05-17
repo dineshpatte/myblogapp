@@ -3,31 +3,43 @@ import { User } from "../models/user.model.js";
 import ApiError from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const createPost = asyncHandler(async (req, res) => {
   const { title, content, status } = req.body;
+  console.log(req.file);
 
-  if (!(title || content)) {
-    throw new ApiError(402, " both title and content are required");
+  if (!title || !content) {
+    throw new ApiError(402, "Both title and content are required");
   }
 
   const author = req.user?._id;
-  console.log(author);
-
   if (!author) {
-    throw new ApiError(403, "please login");
+    throw new ApiError(403, "Please login");
   }
 
+  const thumbnailLocalPath = req.files?.thumbnail?.[0]?.path;
+  console.log("thumbnailLocalPath:", thumbnailLocalPath);
+
+  if (!thumbnailLocalPath) {
+    throw new ApiError(404, "The thumbnail does not exist in local path");
+  }
+
+  const thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
+  if (!thumbnail) {
+    throw new ApiError(404, "thumbnail has not been uploaded");
+  }
   const post = await Post.create({
     title,
     content,
     status,
     author,
+    thumbnail: thumbnail.url,
   });
 
   return res
     .status(200)
-    .json(new ApiResponse(200, post, "post created successfully"));
+    .json(new ApiResponse(200, post, "Post created successfully"));
 });
 
 const getAllPosts = asyncHandler(async (req, res) => {
