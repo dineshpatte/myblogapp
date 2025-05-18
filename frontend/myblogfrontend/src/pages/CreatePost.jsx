@@ -57,7 +57,7 @@ function CreatePost() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-16 p-8 bg-[#f8f4e3] rounded-3xl shadow-lg">
+    <div className="max-w-2xl mx-auto mt-10 p-8 bg-[#f8f4e3] rounded-3xl shadow-lg">
       <h2 className="text-4xl font-extrabold mb-8 text-center text-[#3a2e1e] tracking-wide">
         Create New Post
       </h2>

@@ -1,11 +1,13 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "../api";
+import { Menu, X } from "lucide-react";
 
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [user, setUser] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -14,6 +16,9 @@ function Navbar() {
     } else {
       setUser(null);
     }
+
+    // Close mobile menu on route change
+    setIsOpen(false);
   }, [location]);
 
   const handleLogout = async () => {
@@ -35,11 +40,12 @@ function Navbar() {
           The Paper Quill
         </Link>
 
-        <div className="flex gap-8 text-lg font-semibold">
+        {/* Desktop Menu */}
+        <div className="gap-8 text-lg font-semibold hidden md:flex">
           <Link to="/" className="hover:text-[#1f1712] transition-colors">
             Home
           </Link>
-          {user && (
+          {user ? (
             <>
               <Link
                 to="/create-post"
@@ -66,8 +72,7 @@ function Navbar() {
                 Logout
               </button>
             </>
-          )}
-          {!user && (
+          ) : (
             <>
               <Link
                 to="/login"
@@ -84,7 +89,68 @@ function Navbar() {
             </>
           )}
         </div>
+
+        {/* Hamburger Menu Button (Mobile) */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden text-3xl text-[#3e3229] p-2"
+        >
+          {isOpen ? <X /> : <Menu />}
+        </button>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {isOpen && (
+        <div className="md-hidden flex flex-col mt-4 space-y-4 bg-[#f8f3eb] p-4 rounded-md text-lg font-medium shadow-md">
+          <Link
+            to="/"
+            onClick={() => {
+              setIsOpen(false);
+            }}
+          >
+            Home
+          </Link>
+
+          {user ? (
+            <>
+              <Link
+                to="create-post"
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                CreatePost
+              </Link>
+              <Link
+                to="myposts"
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                myPosts
+              </Link>
+              <Link
+                to="explore"
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                Explore
+              </Link>
+              <button onClick={handleLogout}>Logout</button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" onClick={() => setIsOpen(false)}>
+                Login
+              </Link>
+              <Link to="/register" onClick={() => setIsOpen(false)}>
+                Register
+              </Link>
+            </>
+          )}
+        </div>
+      )}
     </nav>
   );
 }
