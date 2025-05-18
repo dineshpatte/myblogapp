@@ -26,7 +26,6 @@ function MyPosts() {
       const userPosts = res.data.data || [];
       setPosts(userPosts);
 
-      // Fetch comments for each post
       userPosts.forEach((post) => fetchComments(post._id));
     } catch (err) {
       setMessage("Could not fetch posts");
@@ -92,68 +91,23 @@ function MyPosts() {
   }, []);
 
   return (
-    <div className="p-6 max-w-screen-lg mx-auto">
-      <h2 className="text-3xl font-bold mb-8 text-center">My Posts</h2>
-      {message && <p className="text-red-600 mb-4 text-center">{message}</p>}
+    <div className="p-6 max-w-screen-2xl mx-auto bg-[#f5efe6] min-h-screen">
+      <h2 className="text-4xl font-serif font-bold mb-10 text-center text-[#5b3a29] tracking-wide">
+        My Posts
+      </h2>
+      {message && (
+        <p className="text-red-700 mb-6 text-center font-semibold">{message}</p>
+      )}
 
-      <div className="flex flex-col gap-8">
+      {/* Grid with 2 columns */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">
         {posts.map((post) => (
           <div
             key={post._id}
-            className="border rounded shadow flex flex-col md:flex-row overflow-hidden"
+            className="bg-[#faf4ea] border border-[#d7c9b6] rounded-lg shadow-lg overflow-hidden flex flex-col "
+            style={{ fontFamily: "'Georgia', serif" }}
           >
-            {/* Content */}
-            <div className="flex-1 p-6">
-              <h3 className="font-bold text-2xl mb-4">{post.title}</h3>
-              <p className="mb-4">{post.content}</p>
-
-              {post.status === "published" && (
-                <div className="inline-block bg-green-100 text-green-700 font-semibold px-3 py-1 rounded mb-2">
-                  ✅ Published
-                </div>
-              )}
-
-              <div className="flex space-x-6 text-2xl mt-4 mb-4">
-                <span
-                  className="cursor-pointer hover:text-blue-600"
-                  onClick={() => handleEditClick(post)}
-                  title="Edit"
-                >
-                  ✏️
-                </span>
-                <span
-                  className="cursor-pointer hover:text-red-600"
-                  onClick={() => handleDelete(post._id)}
-                  title="Delete"
-                >
-                  🗑️
-                </span>
-              </div>
-
-              {/* Comments Section */}
-              <div className="mt-4 bg-gray-50 border-t pt-2">
-                <h4 className="text-sm font-semibold mb-1 flex items-center gap-1">
-                  🗨 Comments
-                </h4>
-                {comments[post._id]?.length > 0 ? (
-                  comments[post._id].map((comment) => (
-                    <div
-                      key={comment._id}
-                      className="text-sm text-gray-700 mb-1"
-                    >
-                      <span className="font-medium">
-                        {comment.commenter?.username || "Anonymous"}:
-                      </span>{" "}
-                      {comment.content}
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-xs text-gray-500">No comments yet.</p>
-                )}
-              </div>
-            </div>
-
-            {/* Image */}
+            {/* Image on top full width */}
             {post.thumbnail && (
               <img
                 src={
@@ -162,25 +116,85 @@ function MyPosts() {
                     : post.thumbnail.secure_url || post.thumbnail.url
                 }
                 alt={post.title}
-                className="w-full md:w-1/3 object-cover"
-                style={{ minHeight: "200px" }}
+                className="object-cover w-full"
+                style={{ height: "180px" }}
               />
             )}
+
+            {/* Content below */}
+            <div className="p-6 flex flex-col flex-grow justify-between text-[#5b3a29]">
+              <div>
+                <h3 className="font-serif font-bold text-2xl mb-3 tracking-tight">
+                  {post.title}
+                </h3>
+                <p className="mb-4 leading-relaxed text-sm">{post.content}</p>
+                {post.status === "published" && (
+                  <div className="inline-block bg-[#c6a77b] text-[#4a2e11] font-semibold px-3 py-1 rounded mb-4 shadow-inner text-sm">
+                    Published
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <div className="flex space-x-6 text-2xl mb-4">
+                  <span
+                    className="cursor-pointer hover:text-[#a05626] transition duration-300"
+                    onClick={() => handleEditClick(post)}
+                    title="Edit"
+                  >
+                    ✏️
+                  </span>
+                  <span
+                    className="cursor-pointer hover:text-[#b33a1a] transition duration-300"
+                    onClick={() => handleDelete(post._id)}
+                    title="Delete"
+                  >
+                    🗑️
+                  </span>
+                </div>
+
+                <div
+                  className="bg-[#ede6d7] border-t border-[#d7c9b6] pt-2 rounded-b max-h-32  px-6  py-4 overflow-scroll"
+                  style={{ fontFamily: "'Palatino Linotype', serif" }}
+                >
+                  <h4 className="text-xs font-semibold mb-1 flex items-center gap-1 text-[#6d553a]">
+                    🗨 Comments
+                  </h4>
+                  {comments[post._id]?.length > 0 ? (
+                    comments[post._id].map((comment) => (
+                      <div
+                        key={comment._id}
+                        className="text-xs text-[#5b4a3f] mb-1"
+                      >
+                        <span className="font-medium">
+                          {comment.commenter?.username || "Anonymous"}:
+                        </span>{" "}
+                        {comment.content}
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-[10px] text-[#a3957a] italic">
+                      No comments yet.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         ))}
       </div>
 
       {/* Edit Modal */}
       {editingPost && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-60 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl">
-            <h3 className="text-xl font-bold mb-4">Edit Post</h3>
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center p-4">
+          <div className="bg-[#f9f2e9] p-8 rounded-lg shadow-xl w-full max-w-lg font-serif text-[#5b3a29]">
+            <h3 className="text-2xl font-bold mb-6">Edit Post</h3>
             <input
               type="text"
               name="title"
               value={editForm.title}
               onChange={handleEditChange}
-              className="w-full border px-4 py-2 mb-3 rounded"
+              className="w-full border border-[#d7c9b6] px-4 py-3 mb-4 rounded shadow-inner focus:outline-none focus:ring-2 focus:ring-[#c6a77b]"
               placeholder="Title"
             />
             <textarea
@@ -188,28 +202,28 @@ function MyPosts() {
               value={editForm.content}
               onChange={handleEditChange}
               rows="5"
-              className="w-full border px-4 py-2 mb-3 rounded"
+              className="w-full border border-[#d7c9b6] px-4 py-3 mb-4 rounded shadow-inner resize-none focus:outline-none focus:ring-2 focus:ring-[#c6a77b]"
               placeholder="Content"
             ></textarea>
             <select
               name="status"
               value={editForm.status}
               onChange={handleEditChange}
-              className="w-full border px-4 py-2 mb-4 rounded"
+              className="w-full border border-[#d7c9b6] px-4 py-3 mb-6 rounded shadow-inner focus:outline-none focus:ring-2 focus:ring-[#c6a77b]"
             >
               <option value="draft">Draft</option>
               <option value="published">Published</option>
             </select>
-            <div className="flex justify-end gap-4">
+            <div className="flex justify-end gap-5">
               <button
                 onClick={() => setEditingPost(null)}
-                className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded"
+                className="bg-[#b4a37a] hover:bg-[#a08c4e] text-white px-6 py-2 rounded shadow transition duration-300"
               >
                 Cancel
               </button>
               <button
                 onClick={handleUpdatePost}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                className="bg-[#806231] hover:bg-[#6e5124] text-white px-6 py-2 rounded shadow transition duration-300"
               >
                 Update
               </button>

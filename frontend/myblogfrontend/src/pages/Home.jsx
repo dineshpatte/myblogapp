@@ -1,47 +1,131 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Home() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [articles, setArticles] = useState([]);
   const [user, setUser] = useState(null);
+  const [showWelcome, setShowWelcome] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    } else {
-      setUser(null); // user is logged out
-    }
-  }, [location]); // re-run whenever route changes (e.g., after logout)
+    if (storedUser) setUser(JSON.parse(storedUser));
+  }, []);
 
-  if (!user) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        <h2 className="text-2xl font-bold mb-4">Welcome to the Blog App</h2>
-        <p className="mb-4">Please log in or register to continue.</p>
-        <div className="flex gap-4">
-          <button
-            onClick={() => navigate("/login")}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Login
-          </button>
-          <button
-            onClick={() => navigate("/register")}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-          >
-            Register
-          </button>
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (user) {
+      const fetchArticles = async () => {
+        try {
+          const response = await axios.get(
+            "https://newsapi.org/v2/top-headlines",
+            {
+              params: {
+                country: "us",
+                category: "entertainment",
+                apiKey: "8c866b53ba254aceb2197af70286766b",
+                pageSize: 10,
+              },
+            }
+          );
+          setArticles(response.data.articles);
+        } catch (error) {
+          console.error("Failed to fetch articles", error);
+        }
+      };
+
+      fetchArticles();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowWelcome(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
-      <h1 className="text-3xl font-bold mb-4">Welcome, {user.username}!</h1>
-      <p className="text-gray-600">You're successfully logged in.</p>
+    <div className="min-h-screen bg-[#f8f4e3] text-[#3a2e1e] p-6 flex flex-col items-center">
+      {showWelcome ? (
+        <h1 className="text-5xl font-extrabold mb-6">Welcome to MyBlog</h1>
+      ) : (
+        <>
+          {!user ? (
+            <div className="text-center mb-6">
+              <p className="text-lg font-medium mb-4">
+                Please log in or register to access content.
+              </p>
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={() => navigate("/login")}
+                  className="bg-[#7a6e4f] hover:bg-[#6b6344] text-white font-semibold px-6 py-2 rounded shadow transition"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={() => navigate("/register")}
+                  className="bg-[#a8997e] hover:bg-[#988a6e] text-[#3a2e1e] font-semibold px-6 py-2 rounded shadow transition"
+                >
+                  Register
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <p className="text-center mb-6 text-lg font-medium">
+                Hello, {user.username}! Check out these latest blogs
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex gap-6 mb-8">
+                <button
+                  onClick={() => navigate("/create-post")}
+                  className="bg-[#7a6e4f] hover:bg-[#6b6344] text-white font-semibold px-6 py-3 rounded shadow transition"
+                >
+                  Create Your Own Blog/Post
+                </button>
+                <button
+                  onClick={() => navigate("/explore")}
+                  className="bg-[#a8997e] hover:bg-[#988a6e] text-[#3a2e1e] font-semibold px-6 py-3 rounded shadow transition"
+                >
+                  Explore Other Users' Blogs
+                </button>
+              </div>
+
+              {/* Articles Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl">
+                {articles.map((article, idx) => (
+                  <div
+                    key={idx}
+                    className="border rounded-lg p-4 bg-[#f4ecdc] shadow-md flex flex-col"
+                  >
+                    {article.urlToImage && (
+                      <img
+                        src={article.urlToImage}
+                        alt={article.title}
+                        className="rounded-md mb-4 object-cover h-40 w-full"
+                      />
+                    )}
+                    <h2 className="text-xl font-bold mb-2">{article.title}</h2>
+                    <p className="text-sm mb-3 flex-grow">
+                      {article.description}
+                    </p>
+                    <a
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-700 underline mt-auto"
+                    >
+                      Read More
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </>
+      )}
     </div>
   );
 }

@@ -43,77 +43,79 @@ function Register() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-16 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
-        Register
-      </h2>
-      <form
-        onSubmit={handleSubmit}
-        encType="multipart/form-data"
-        className="flex flex-col gap-4"
-      >
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-          className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <select
-          name="role"
-          value={formData.role}
-          onChange={handleChange}
-          className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="reader">Reader</option>
-          <option value="author">Author</option>
-          <option value="admin">Admin</option>
-        </select>
-        <input
-          type="file"
-          name="avatar"
-          accept="image/*"
-          onChange={handleChange}
-          className="text-gray-700"
-        />
-        <button
-          type="submit"
-          className="mt-4 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300"
-        >
+    <div className="min-h-screen bg-[#f8f4e3] flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-[#f4ecdc] text-[#3a2e1e] p-8 rounded-xl shadow-lg">
+        <h2 className="text-3xl font-serif font-bold mb-6 text-center">
           Register
-        </button>
-      </form>
-      {message && (
-        <p
-          className={`mt-4 text-center font-medium ${
-            message === "Registered successfully!"
-              ? "text-green-600"
-              : "text-red-600"
-          }`}
+        </h2>
+        <form
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+          className="flex flex-col gap-4"
         >
-          {message}
-        </p>
-      )}
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+            className="px-4 py-2 border border-[#c6bfa3] rounded-md bg-white text-[#3a2e1e] focus:outline-none focus:ring-2 focus:ring-[#7a6e4f]"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="px-4 py-2 border border-[#c6bfa3] rounded-md bg-white text-[#3a2e1e] focus:outline-none focus:ring-2 focus:ring-[#7a6e4f]"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="px-4 py-2 border border-[#c6bfa3] rounded-md bg-white text-[#3a2e1e] focus:outline-none focus:ring-2 focus:ring-[#7a6e4f]"
+          />
+          <select
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            className="px-4 py-2 border border-[#c6bfa3] rounded-md bg-white text-[#3a2e1e] focus:outline-none focus:ring-2 focus:ring-[#7a6e4f]"
+          >
+            <option value="reader">Reader</option>
+            <option value="author">Author</option>
+            <option value="admin">Admin</option>
+          </select>
+          <input
+            type="file"
+            name="avatar"
+            accept="image/*"
+            onChange={handleChange}
+            className="text-[#3a2e1e]"
+          />
+          <button
+            type="submit"
+            className="mt-4 bg-[#7a6e4f] hover:bg-[#6b6344] text-white font-semibold py-2 rounded-md shadow transition duration-300"
+          >
+            Register
+          </button>
+        </form>
+        {message && (
+          <p
+            className={`mt-4 text-center font-medium ${
+              message === "Registered successfully!"
+                ? "text-green-600"
+                : "text-red-600"
+            }`}
+          >
+            {message}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

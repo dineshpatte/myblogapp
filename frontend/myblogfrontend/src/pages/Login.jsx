@@ -32,13 +32,10 @@ function Login() {
       localStorage.setItem("token", res.data.token);
       if (res.data && res.data.data && res.data.data.user) {
         localStorage.setItem("user", JSON.stringify(res.data.data.user));
-
         navigate("/");
       } else {
         setMessage("Login failed. Try again.");
       }
-
-      console.log(res.data.user);
     } catch (error) {
       setMessage(
         error.response?.data?.message || "Login failed, please try again."
@@ -48,65 +45,70 @@ function Login() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-16 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-6">Login</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          className="px-4 py-2 border rounded-md"
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          className="px-4 py-2 border rounded-md"
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          className="px-4 py-2 border rounded-md"
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
-        >
-          Login
-        </button>
-      </form>
+    <div className="min-h-screen bg-[#f8f4e3] flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-[#f4ecdc] text-[#3a2e1e] p-8 rounded-xl shadow-lg">
+        <h2 className="text-3xl font-serif font-bold mb-6 text-center">
+          Login to The Paper Quill
+        </h2>
 
-      {message && (
-        <p
-          className={`mt-4 text-center font-medium ${
-            loggedIn ? "text-green-600" : "text-red-600"
-          }`}
-        >
-          {message}
-        </p>
-      )}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={formData.username}
+            onChange={handleChange}
+            className="px-4 py-2 border border-[#c6bfa3] rounded-md bg-white"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            className="px-4 py-2 border border-[#c6bfa3] rounded-md bg-white"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="px-4 py-2 border border-[#c6bfa3] rounded-md bg-white"
+          />
+          <button
+            type="submit"
+            className="bg-[#7a6e4f] hover:bg-[#6b6344] text-white font-semibold py-2 rounded-md shadow transition"
+          >
+            Login
+          </button>
+        </form>
 
-      <div className="mt-6 flex flex-col gap-4">
-        <button
-          onClick={() => navigate("/update-account")}
-          className="bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
-        >
-          Update Account Details
-        </button>
-        <button
-          onClick={() => navigate("/change-password")}
-          className="bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition"
-        >
-          Change Password
-        </button>
+        {message && (
+          <p
+            className={`mt-4 text-center font-medium ${
+              loggedIn ? "text-green-700" : "text-red-600"
+            }`}
+          >
+            {message}
+          </p>
+        )}
+
+        <div className="mt-6 flex flex-col gap-3">
+          <button
+            onClick={() => navigate("/update-account")}
+            className="bg-[#a8997e] hover:bg-[#988a6e] text-[#3a2e1e] font-semibold py-2 rounded-md shadow transition"
+          >
+            Update Account Details
+          </button>
+          <button
+            onClick={() => navigate("/change-password")}
+            className="bg-[#8aaf85] hover:bg-[#7a9e75] text-white font-semibold py-2 rounded-md shadow transition"
+          >
+            Change Password
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -57,52 +57,87 @@ function CreatePost() {
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-12 p-6 bg-white rounded-lg shadow">
-      <h2 className="text-2xl font-bold mb-4">Create New Post</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <div className="max-w-2xl mx-auto mt-16 p-8 bg-[#f8f4e3] rounded-3xl shadow-lg">
+      <h2 className="text-4xl font-extrabold mb-8 text-center text-[#3a2e1e] tracking-wide">
+        Create New Post
+      </h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <input
           type="text"
           name="title"
           placeholder="Post Title"
           value={formData.title}
           onChange={handleChange}
-          className="border px-4 py-2 rounded"
+          className="rounded-full border border-[#d6c9b8] focus:border-[#b39e7f] focus:ring-2 focus:ring-[#b39e7f] px-6 py-3 text-lg font-semibold shadow-sm placeholder-[#a08c75] text-[#3a2e1e] bg-white transition duration-300"
         />
+
         <textarea
           name="content"
           placeholder="Write your content..."
           value={formData.content}
           onChange={handleChange}
           rows="6"
-          className="border px-4 py-2 rounded"
+          className="rounded-2xl border border-[#d6c9b8] focus:border-[#b39e7f] focus:ring-2 focus:ring-[#b39e7f] px-6 py-4 text-lg resize-none shadow-sm placeholder-[#a08c75] text-[#3a2e1e] bg-white transition duration-300"
         />
+
         <select
           name="status"
           value={formData.status}
           onChange={handleChange}
-          className="border px-4 py-2 rounded"
+          className="rounded-full border border-[#d6c9b8] focus:border-[#b39e7f] focus:ring-2 focus:ring-[#b39e7f] px-6 py-3 text-lg font-semibold shadow-sm bg-white text-[#3a2e1e] transition duration-300"
         >
           <option value="draft">Draft</option>
           <option value="published">Published</option>
         </select>
 
-        {/* NEW FILE INPUT */}
-        <input
-          type="file"
-          name="thumbnail"
-          accept="image/*"
-          onChange={handleChange}
-          className="border p-2 rounded"
-        />
+        <label className="flex flex-col items-center border-2 border-dashed border-[#d6c9b8] rounded-3xl py-6 cursor-pointer hover:bg-[#e9e3d8] transition duration-300 text-[#3a2e1e]">
+          {thumbnail ? (
+            <p className="font-semibold">{`Selected File: ${thumbnail.name}`}</p>
+          ) : (
+            <>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-12 w-12 mb-2 text-[#b39e7f]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M7 16V4m0 0L3 8m4-4l4 4m6 8v4m0 0l4-4m-4 4l-4-4"
+                />
+              </svg>
+              <span className="font-semibold">Upload Thumbnail Image</span>
+            </>
+          )}
+          <input
+            type="file"
+            name="thumbnail"
+            accept="image/*"
+            onChange={handleChange}
+            className="hidden"
+          />
+        </label>
 
         <button
           type="submit"
-          className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          className="bg-[#b39e7f] hover:bg-[#a58f6b] text-[#3a2e1e] font-bold py-3 rounded-full shadow-md transition duration-300"
         >
           Create Post
         </button>
       </form>
-      {message && <p className="mt-4 text-center text-red-600">{message}</p>}
+
+      {message && (
+        <p
+          className={`mt-6 text-center font-semibold ${
+            message.includes("successfully") ? "text-green-700" : "text-red-700"
+          }`}
+        >
+          {message}
+        </p>
+      )}
     </div>
   );
 }
