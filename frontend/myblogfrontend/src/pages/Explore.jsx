@@ -5,7 +5,8 @@ function Explore() {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState("");
   const [comments, setComments] = useState({});
-  const [expandedPosts, setExpandedPosts] = useState({}); // track expanded state
+  const [newComments, setNewComments] = useState({});
+  const [expandedPosts, setExpandedPosts] = useState({});
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -15,9 +16,15 @@ function Explore() {
         });
 
         const postsArray = res.data?.data?.posts;
+        const user = JSON.parse(localStorage.getItem("user"));
+        const userId = user?._id;
 
         if (Array.isArray(postsArray)) {
-          setPosts(postsArray);
+          const filteredPosts = postsArray.filter(
+            (post) => post.author?._id !== userId
+          );
+          setPosts(filteredPosts);
+          filteredPosts.forEach((post) => fetchComments(post._id));
         } else {
           setError("Posts data is not an array");
           setPosts([]);
@@ -32,15 +39,32 @@ function Explore() {
     fetchPosts();
   }, []);
 
-  const handleCommentChange = (postId, value) => {
-    setComments((prev) => ({ ...prev, [postId]: value }));
+  const fetchComments = async (postId) => {
+    try {
+      const res = await axios.get(`/comments/getcommentsbypost/${postId}`);
+      setComments((prev) => ({ ...prev, [postId]: res.data.data }));
+    } catch (err) {
+      console.error("Error fetching comments:", err);
+    }
   };
 
-  const handleCommentSubmit = (postId) => {
-    const comment = comments[postId];
-    if (comment) {
-      alert(`Comment on post ${postId}: ${comment}`);
-      setComments((prev) => ({ ...prev, [postId]: "" }));
+  const handleCommentChange = (postId, value) => {
+    setNewComments((prev) => ({ ...prev, [postId]: value }));
+  };
+
+  const handleCommentSubmit = async (postId) => {
+    const comment = newComments[postId];
+    if (!comment) return;
+
+    try {
+      await axios.post("/comments/addcomment", {
+        content: comment,
+        postId,
+      });
+      setNewComments((prev) => ({ ...prev, [postId]: "" }));
+      fetchComments(postId);
+    } catch (err) {
+      console.error("Error adding comment:", err);
     }
   };
 
@@ -94,22 +118,41 @@ function Explore() {
                   {expandedPosts[post._id] ? "Read Less" : "Read More"}
                 </button>
 
-                <div className="mt-auto">
-                  <textarea
-                    placeholder="Write a comment..."
-                    className="w-full border rounded p-2 text-sm mb-2"
-                    rows="2"
-                    value={comments[post._id] || ""}
-                    onChange={(e) =>
-                      handleCommentChange(post._id, e.target.value)
-                    }
-                  />
-                  <button
-                    onClick={() => handleCommentSubmit(post._id)}
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
-                  >
-                    Submit Comment
-                  </button>
+                <textarea
+                  placeholder="Write a comment..."
+                  className="w-full border rounded p-2 text-sm mb-2"
+                  rows="2"
+                  value={newComments[post._id] || ""}
+                  onChange={(e) =>
+                    handleCommentChange(post._id, e.target.value)
+                  }
+                />
+                <button
+                  onClick={() => handleCommentSubmit(post._id)}
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm mb-4"
+                >
+                  Submit Comment
+                </button>
+
+                <div className="bg-gray-50 border-t pt-2 mt-2">
+                  <h4 className="text-sm font-semibold mb-1 flex items-center gap-1">
+                    🗨 Comments
+                  </h4>
+                  {comments[post._id]?.length > 0 ? (
+                    comments[post._id].map((comment) => (
+                      <div
+                        key={comment._id}
+                        className="text-sm text-gray-700 mb-1"
+                      >
+                        <span className="font-medium">
+                          {comment.commenter?.username || "Anonymous"}:
+                        </span>{" "}
+                        {comment.content}
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-xs text-gray-500">No comments yet.</p>
+                  )}
                 </div>
               </div>
             ))}

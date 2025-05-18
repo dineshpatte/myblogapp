@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function MyPosts() {
   const [posts, setPosts] = useState([]);
+  const [comments, setComments] = useState({});
   const [message, setMessage] = useState("");
   const [editingPost, setEditingPost] = useState(null);
   const [editForm, setEditForm] = useState({
@@ -22,9 +23,22 @@ function MyPosts() {
           Authorization: `Bearer ${token}`,
         },
       });
-      setPosts(res.data.data || []);
+      const userPosts = res.data.data || [];
+      setPosts(userPosts);
+
+      // Fetch comments for each post
+      userPosts.forEach((post) => fetchComments(post._id));
     } catch (err) {
       setMessage("Could not fetch posts");
+    }
+  };
+
+  const fetchComments = async (postId) => {
+    try {
+      const res = await axios.get(`/comments/getcommentsbypost/${postId}`);
+      setComments((prev) => ({ ...prev, [postId]: res.data.data || [] }));
+    } catch (err) {
+      console.error("Failed to fetch comments:", err);
     }
   };
 
@@ -92,12 +106,14 @@ function MyPosts() {
             <div className="flex-1 p-6">
               <h3 className="font-bold text-2xl mb-4">{post.title}</h3>
               <p className="mb-4">{post.content}</p>
+
               {post.status === "published" && (
                 <div className="inline-block bg-green-100 text-green-700 font-semibold px-3 py-1 rounded mb-2">
                   ✅ Published
                 </div>
               )}
-              <div className="flex space-x-6 text-2xl mt-4">
+
+              <div className="flex space-x-6 text-2xl mt-4 mb-4">
                 <span
                   className="cursor-pointer hover:text-blue-600"
                   onClick={() => handleEditClick(post)}
@@ -112,13 +128,28 @@ function MyPosts() {
                 >
                   🗑️
                 </span>
-                <span
-                  className="cursor-pointer hover:text-gray-600"
-                  onClick={() => navigate(`/post/${post._id}`)}
-                  title="Comment"
-                >
-                  💬
-                </span>
+              </div>
+
+              {/* Comments Section */}
+              <div className="mt-4 bg-gray-50 border-t pt-2">
+                <h4 className="text-sm font-semibold mb-1 flex items-center gap-1">
+                  🗨 Comments
+                </h4>
+                {comments[post._id]?.length > 0 ? (
+                  comments[post._id].map((comment) => (
+                    <div
+                      key={comment._id}
+                      className="text-sm text-gray-700 mb-1"
+                    >
+                      <span className="font-medium">
+                        {comment.commenter?.username || "Anonymous"}:
+                      </span>{" "}
+                      {comment.content}
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-xs text-gray-500">No comments yet.</p>
+                )}
               </div>
             </div>
 
