@@ -8,6 +8,7 @@ import MyPosts from "./pages/MyPosts";
 import PostDetails from "./pages/PostDetails";
 import UpdateAccount from "./pages/updateAccount";
 import ChangePassword from "./pages/changePassword";
+import Explore from "./pages/Explore";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/posts/:postId" element={<PostDetails />} />
         <Route path="/update-account" element={<UpdateAccount />} />
         <Route path="/change-password" element={<ChangePassword />} />
+        <Route path="/explore" element={<Explore />} />
       </Routes>
     </Router>
   );
