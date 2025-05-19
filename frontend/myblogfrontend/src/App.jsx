@@ -9,6 +9,7 @@ import PostDetails from "./pages/PostDetails";
 import UpdateAccount from "./pages/updateAccount";
 import ChangePassword from "./pages/changePassword";
 import Explore from "./pages/Explore";
+import About from "./pages/About";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/update-account" element={<UpdateAccount />} />
         <Route path="/change-password" element={<ChangePassword />} />
         <Route path="/explore" element={<Explore />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </Router>
   );

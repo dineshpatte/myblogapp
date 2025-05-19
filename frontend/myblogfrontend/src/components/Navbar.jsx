@@ -1,7 +1,7 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "../api";
-import { Menu, X, LogOut } from "lucide-react"; // Import LogOut icon
+import { Menu, X, LogOut } from "lucide-react";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -46,6 +46,9 @@ function Navbar() {
           <Link to="/" className="hover:text-[#9ca3af] transition-colors">
             Home
           </Link>
+          <Link to="/about" className="hover:text-[#9ca3af] transition-colors">
+            About
+          </Link>
 
           {user ? (
             <>
@@ -67,6 +70,7 @@ function Navbar() {
               >
                 Explore
               </Link>
+
               <button
                 onClick={handleLogout}
                 className="hover:text-[#9ca3af] transition-colors bg-transparent border-none cursor-pointer p-1 rounded"
@@ -93,7 +97,6 @@ function Navbar() {
           )}
         </div>
 
-        {/* Hamburger Menu Button (Mobile) */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="md:hidden text-3xl text-[#c7c7c7] p-2 bg-transparent border-none"
@@ -103,7 +106,6 @@ function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Menu Dropdown */}
       {isOpen && (
         <div className="md:hidden flex flex-col mt-4 space-y-4 bg-[#0e0e0e] p-4 rounded-md text-lg font-medium shadow-md border border-[#2e2e2e]">
           <Link
@@ -112,6 +114,13 @@ function Navbar() {
             className="text-[#c7c7c7] hover:text-[#9ca3af] transition-colors"
           >
             Home
+          </Link>
+          <Link
+            to="/about"
+            onClick={() => setIsOpen(false)}
+            className="text-[#c7c7c7] hover:text-[#9ca3af] transition-colors"
+          >
+            About
           </Link>
 
           {user ? (
@@ -137,6 +146,9 @@ function Navbar() {
               >
                 Explore
               </Link>
+              <span className="text-sm text-gray-400 px-1">
+                Hello, <span className="text-white">{user.username}</span>
+              </span>
               <button
                 onClick={handleLogout}
                 className="text-[#c7c7c7] hover:text-[#9ca3af] transition-colors bg-transparent border-none cursor-pointer text-left p-1 rounded"

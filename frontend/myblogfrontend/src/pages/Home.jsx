@@ -132,7 +132,7 @@
 
 // export default Home;
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
 function Home() {
@@ -156,6 +156,7 @@ function Home() {
               params: {
                 country: "us",
                 category: "entertainment",
+
                 apiKey: "8c866b53ba254aceb2197af70286766b",
                 pageSize: 10,
               },
@@ -182,7 +183,7 @@ function Home() {
     <div className="min-h-screen bg-[#0e0e0e] text-[#e0e0e0] p-6 flex flex-col items-center font-sans">
       {showWelcome ? (
         <h1 className="text-5xl font-extrabold mb-6 text-white tracking-wide">
-          Welcome to MyBlog
+          Welcome to The Paper Quill
         </h1>
       ) : (
         <>
@@ -263,6 +264,15 @@ function Home() {
           )}
         </>
       )}
+
+      <div className="mt-12 text-center">
+        <Link
+          to="/about"
+          className="text-[#c7c7c7] hover:text-[#9ca3af] text-lg underline transition-colors"
+        >
+          Learn more about us →
+        </Link>
+      </div>
     </div>
   );
 }
