@@ -26,18 +26,16 @@ function ChangePassword() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f4e3] flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-[#f4ecdc] text-[#3a2e1e] p-8 rounded-xl shadow-lg">
-        <h2 className="text-3xl font-serif font-bold mb-6 text-center">
-          Change Password
-        </h2>
+    <div className="min-h-screen bg-black flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-[#111] text-white p-8 rounded-xl shadow-xl border border-gray-800">
+        <h2 className="text-3xl font-bold mb-6 text-center">Change Password</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
             type="password"
             placeholder="Old Password"
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
-            className="px-4 py-2 border border-[#c6bfa3] rounded-md bg-white"
+            className="px-4 py-2 border border-gray-600 rounded-md bg-black text-white placeholder-gray-400"
             required
           />
           <input
@@ -45,19 +43,19 @@ function ChangePassword() {
             placeholder="New Password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            className="px-4 py-2 border border-[#c6bfa3] rounded-md bg-white"
+            className="px-4 py-2 border border-gray-600 rounded-md bg-black text-white placeholder-gray-400"
             required
           />
           <button
             type="submit"
-            className="bg-[#7a6e4f] hover:bg-[#6b6344] text-white font-semibold py-2 rounded-md shadow transition"
+            className="bg-white hover:bg-gray-300 text-black font-semibold py-2 rounded-md transition"
           >
             Change Password
           </button>
         </form>
 
         {message && (
-          <p className="mt-4 text-center font-medium text-green-700">
+          <p className="mt-4 text-center font-medium text-green-400">
             {message}
           </p>
         )}

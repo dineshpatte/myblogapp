@@ -76,34 +76,35 @@ function Explore() {
   };
 
   return (
-    <div className="p-6 bg-[#f9f5ec] min-h-screen font-serif">
-      <h2 className="text-3xl font-bold mb-6 text-center text-[#5c3d2e]">
+    <div className="p-6 bg-black min-h-screen font-serif text-white">
+      <h2 className="text-3xl font-bold mb-6 text-center text-white">
         Explore Posts
       </h2>
 
-      {error && <p className="text-red-600 mb-4 text-center">{error}</p>}
+      {error && <p className="text-red-400 mb-4 text-center">{error}</p>}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {posts.map((post) => (
           <div
             key={post._id}
-            className="bg-[#fffaf2] shadow-md rounded-xl border border-[#d9c2a3] p-5 transition-transform transform hover:scale-[1.01]"
+            className="bg-[#1a1a1a] shadow-md rounded-xl border border-[#333] p-5 transition-transform transform hover:scale-[1.01]"
           >
             <img
               src={post.thumbnail}
               alt={post.title}
-              className="w-full h-52 object-cover rounded-md mb-4 border border-[#d9c2a3]"
+              className="w-full h-52 object-cover rounded-md mb-4 border border-[#444]"
             />
 
-            <h3 className="text-xl font-bold text-[#5c3d2e] mb-1">
-              {post.title}
-            </h3>
+            <h3 className="text-xl font-bold text-white mb-1">{post.title}</h3>
 
-            <p className="text-sm text-[#7a5c43] mb-2 italic">
-              By <span className="font-semibold">{post.author?.username}</span>
+            <p className="text-sm text-gray-400 mb-2 italic">
+              By{" "}
+              <span className="font-semibold text-gray-200">
+                {post.author?.username}
+              </span>
             </p>
 
-            <p className="text-[#4e3b2e] text-sm mb-3 whitespace-pre-line">
+            <p className="text-gray-200 text-sm mb-3 whitespace-pre-line">
               {expandedPosts[post._id]
                 ? post.content
                 : post.content.slice(0, 100) + "..."}
@@ -111,45 +112,40 @@ function Explore() {
 
             <button
               onClick={() => toggleExpand(post._id)}
-              className="text-[#9c6644] hover:underline text-sm mb-4"
+              className="text-gray-300 hover:underline text-sm mb-4"
             >
               {expandedPosts[post._id] ? "Read Less" : "Read More"}
             </button>
 
             <textarea
               placeholder="Write a comment..."
-              className="w-full border border-[#e0c9aa] rounded p-2 text-sm mb-2 bg-[#fffaf3] focus:outline-none"
+              className="w-full border border-gray-600 rounded p-2 text-sm mb-2 bg-[#222] text-white focus:outline-none"
               rows="2"
               value={newComments[post._id] || ""}
               onChange={(e) => handleCommentChange(post._id, e.target.value)}
             />
             <button
               onClick={() => handleCommentSubmit(post._id)}
-              className="bg-[#9c6644] hover:bg-[#7e4f33] text-white px-4 py-1 rounded text-sm"
+              className="bg-white text-black px-4 py-1 rounded text-sm hover:bg-gray-300"
             >
               Submit
             </button>
 
-            <div className="bg-[#f5efe3] mt-4 border-t border-[#d9c2a3] pt-3 px-6 py-4">
-              <h4 className="text-sm font-semibold mb-2 text-[#5c3d2e]">
+            <div className="bg-[#111] mt-4 border-t border-gray-700 pt-3 px-6 py-4">
+              <h4 className="text-sm font-semibold mb-2 text-white">
                 🗨 Comments
               </h4>
               {comments[post._id]?.length > 0 ? (
                 comments[post._id].map((comment) => (
-                  <div
-                    key={comment._id}
-                    className="text-sm text-[#4e3b2e] mb-2"
-                  >
-                    <span className="font-medium">
+                  <div key={comment._id} className="text-sm text-gray-300 mb-2">
+                    <span className="font-medium text-white">
                       {comment.commenter?.username || "Anonymous"}:
                     </span>{" "}
                     {comment.content}
                   </div>
                 ))
               ) : (
-                <p className="text-xs text-[#a38b6e] italic">
-                  No comments yet.
-                </p>
+                <p className="text-xs text-gray-500 italic">No comments yet.</p>
               )}
             </div>
           </div>

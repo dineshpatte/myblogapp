@@ -43,11 +43,9 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f4e3] flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-[#f4ecdc] text-[#3a2e1e] p-8 rounded-xl shadow-lg">
-        <h2 className="text-3xl font-serif font-bold mb-6 text-center">
-          Register
-        </h2>
+    <div className="min-h-screen bg-black flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-[#111] text-white p-8 rounded-xl shadow-xl border border-gray-800">
+        <h2 className="text-3xl font-bold mb-6 text-center">Register</h2>
         <form
           onSubmit={handleSubmit}
           encType="multipart/form-data"
@@ -60,7 +58,7 @@ function Register() {
             value={formData.username}
             onChange={handleChange}
             required
-            className="px-4 py-2 border border-[#c6bfa3] rounded-md bg-white text-[#3a2e1e] focus:outline-none focus:ring-2 focus:ring-[#7a6e4f]"
+            className="px-4 py-2 border border-gray-600 rounded-md bg-black text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
           />
           <input
             type="email"
@@ -69,7 +67,7 @@ function Register() {
             value={formData.email}
             onChange={handleChange}
             required
-            className="px-4 py-2 border border-[#c6bfa3] rounded-md bg-white text-[#3a2e1e] focus:outline-none focus:ring-2 focus:ring-[#7a6e4f]"
+            className="px-4 py-2 border border-gray-600 rounded-md bg-black text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
           />
           <input
             type="password"
@@ -78,13 +76,13 @@ function Register() {
             value={formData.password}
             onChange={handleChange}
             required
-            className="px-4 py-2 border border-[#c6bfa3] rounded-md bg-white text-[#3a2e1e] focus:outline-none focus:ring-2 focus:ring-[#7a6e4f]"
+            className="px-4 py-2 border border-gray-600 rounded-md bg-black text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
           />
           <select
             name="role"
             value={formData.role}
             onChange={handleChange}
-            className="px-4 py-2 border border-[#c6bfa3] rounded-md bg-white text-[#3a2e1e] focus:outline-none focus:ring-2 focus:ring-[#7a6e4f]"
+            className="px-4 py-2 border border-gray-600 rounded-md bg-black text-white focus:outline-none focus:ring-2 focus:ring-white"
           >
             <option value="reader">Reader</option>
             <option value="author">Author</option>
@@ -95,11 +93,11 @@ function Register() {
             name="avatar"
             accept="image/*"
             onChange={handleChange}
-            className="text-[#3a2e1e]"
+            className="text-white"
           />
           <button
             type="submit"
-            className="mt-4 bg-[#7a6e4f] hover:bg-[#6b6344] text-white font-semibold py-2 rounded-md shadow transition duration-300"
+            className="mt-4 bg-white hover:bg-gray-300 text-black font-semibold py-2 rounded-md shadow transition duration-300"
           >
             Register
           </button>
@@ -108,8 +106,8 @@ function Register() {
           <p
             className={`mt-4 text-center font-medium ${
               message === "Registered successfully!"
-                ? "text-green-600"
-                : "text-red-600"
+                ? "text-green-400"
+                : "text-red-400"
             }`}
           >
             {message}

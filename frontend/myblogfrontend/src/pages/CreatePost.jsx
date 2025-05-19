@@ -14,7 +14,6 @@ function CreatePost() {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-
     if (name === "thumbnail") {
       setThumbnail(files[0]);
     } else {
@@ -40,7 +39,7 @@ function CreatePost() {
         data.append("thumbnail", thumbnail);
       }
 
-      const res = await axios.post("/posts/createpost", data, {
+      await axios.post("/posts/createpost", data, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -57,18 +56,19 @@ function CreatePost() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-8 bg-[#f8f4e3] rounded-3xl shadow-lg">
-      <h2 className="text-4xl font-extrabold mb-8 text-center text-[#3a2e1e] tracking-wide">
+    <div className="w-screen h-screen mx-auto p-8 bg-[#0e0e0e] shadow-xl text-[#e0e0e0]">
+      <h2 className="text-4xl font-extrabold mb-8 text-center text-white tracking-wide">
         Create New Post
       </h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6 ">
         <input
           type="text"
           name="title"
           placeholder="Post Title"
           value={formData.title}
           onChange={handleChange}
-          className="rounded-full border border-[#d6c9b8] focus:border-[#b39e7f] focus:ring-2 focus:ring-[#b39e7f] px-6 py-3 text-lg font-semibold shadow-sm placeholder-[#a08c75] text-[#3a2e1e] bg-white transition duration-300"
+          className="focus:ring-2 focus:ring-[#555] px-6 py-3 text-lg font-semibold shadow-sm placeholder-gray-500 text-white bg-[#1a1a1a] transition duration-300 rounded-2xl"
         />
 
         <textarea
@@ -77,39 +77,47 @@ function CreatePost() {
           value={formData.content}
           onChange={handleChange}
           rows="6"
-          className="rounded-2xl border border-[#d6c9b8] focus:border-[#b39e7f] focus:ring-2 focus:ring-[#b39e7f] px-6 py-4 text-lg resize-none shadow-sm placeholder-[#a08c75] text-[#3a2e1e] bg-white transition duration-300"
+          className="rounded-2xl border border-[#2d2d2d] focus:border-[#555] focus:ring-2 focus:ring-[#555] px-6 py-4 text-lg resize-none shadow-sm placeholder-gray-500 text-white bg-[#1a1a1a] transition duration-300"
         />
 
         <select
           name="status"
           value={formData.status}
           onChange={handleChange}
-          className="rounded-full border border-[#d6c9b8] focus:border-[#b39e7f] focus:ring-2 focus:ring-[#b39e7f] px-6 py-3 text-lg font-semibold shadow-sm bg-white text-[#3a2e1e] transition duration-300"
+          className="rounded-2xl border border-[#2d2d2d] focus:border-[#555] focus:ring-2 focus:ring-[#555] px-8 py-3 text-lg font-semibold shadow-sm bg-[#1a1a1a] text-white transition duration-300 appearance-none relative pr-12"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3csvg fill='none' stroke='%23c7c7c7' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M6 9l6 6 6-6'%3e%3c/path%3e%3c/svg%3e")`,
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "right 1rem center",
+            backgroundSize: "1.25em",
+          }}
         >
           <option value="draft">Draft</option>
           <option value="published">Published</option>
         </select>
 
-        <label className="flex flex-col items-center border-2 border-dashed border-[#d6c9b8] rounded-3xl py-6 cursor-pointer hover:bg-[#e9e3d8] transition duration-300 text-[#3a2e1e]">
+        <label className="flex flex-col items-center border-2 border-dashed border-[#2d2d2d] rounded-3xl py-6 cursor-pointer hover:bg-[#1f1f1f] transition duration-300 text-white">
           {thumbnail ? (
             <p className="font-semibold">{`Selected File: ${thumbnail.name}`}</p>
           ) : (
             <>
+              {/* Upload icon only */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-12 w-12 mb-2 text-[#b39e7f]"
+                className="h-12 w-12 mb-2 text-gray-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M7 16V4m0 0L3 8m4-4l4 4m6 8v4m0 0l4-4m-4 4l-4-4"
-                />
+                <path d="M12 19V6" />
+                <path d="M5 13l7-7 7 7" />
               </svg>
-              <span className="font-semibold">Upload Thumbnail Image</span>
+              <span className="font-semibold text-gray-300">
+                Upload Thumbnail Image
+              </span>
             </>
           )}
           <input
@@ -123,7 +131,7 @@ function CreatePost() {
 
         <button
           type="submit"
-          className="bg-[#b39e7f] hover:bg-[#a58f6b] text-[#3a2e1e] font-bold py-3 rounded-full shadow-md transition duration-300"
+          className="bg-[#333] hover:bg-[#444] text-white font-bold py-3 rounded-full shadow-md transition duration-300"
         >
           Create Post
         </button>
@@ -132,7 +140,7 @@ function CreatePost() {
       {message && (
         <p
           className={`mt-6 text-center font-semibold ${
-            message.includes("successfully") ? "text-green-700" : "text-red-700"
+            message.includes("successfully") ? "text-[#7cd1a8]" : "text-red-500"
           }`}
         >
           {message}
