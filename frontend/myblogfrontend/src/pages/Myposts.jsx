@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "../api";
 import { useNavigate } from "react-router-dom";
+import api from "../api";
 
 function MyPosts() {
   const [posts, setPosts] = useState([]);
@@ -18,7 +19,7 @@ function MyPosts() {
   const fetchMyPosts = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.get("/posts/getpostbyuserid", {
+      const res = await api.get("/posts/getpostbyuserid", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -34,7 +35,7 @@ function MyPosts() {
 
   const fetchComments = async (postId) => {
     try {
-      const res = await axios.get(`/comments/getcommentsbypost/${postId}`);
+      const res = await api.get(`/comments/getcommentsbypost/${postId}`);
       setComments((prev) => ({ ...prev, [postId]: res.data.data || [] }));
     } catch (err) {
       console.error("Failed to fetch comments:", err);
@@ -44,7 +45,7 @@ function MyPosts() {
   const handleDelete = async (postId) => {
     const token = localStorage.getItem("token");
     try {
-      await axios.delete(`/posts/deletepost/${postId}`, {
+      await api.delete(`/posts/deletepost/${postId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -74,7 +75,7 @@ function MyPosts() {
     const token = localStorage.getItem("token");
 
     try {
-      await axios.put(`/posts/updatepost/${editingPost._id}`, editForm, {
+      await api.put(`/posts/updatepost/${editingPost._id}`, editForm, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "../api";
+import api from "../api";
 
 function Explore() {
   const [posts, setPosts] = useState([]);
@@ -11,7 +12,7 @@ function Explore() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await axios.get("/posts/getallposts", {
+        const res = await api.get("/posts/getallposts", {
           params: { status: "published", page: 1, limit: 50 },
         });
 
@@ -41,7 +42,7 @@ function Explore() {
 
   const fetchComments = async (postId) => {
     try {
-      const res = await axios.get(`/comments/getcommentsbypost/${postId}`);
+      const res = await api.get(`/comments/getcommentsbypost/${postId}`);
       setComments((prev) => ({ ...prev, [postId]: res.data.data }));
     } catch (err) {
       console.error("Error fetching comments:", err);
@@ -57,7 +58,7 @@ function Explore() {
     if (!comment) return;
 
     try {
-      await axios.post("/comments/addcomment", {
+      await api.post("/comments/addcomment", {
         content: comment,
         postId,
       });

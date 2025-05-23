@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "../api";
 import { useNavigate } from "react-router-dom";
+import api from "../api";
 
 function CreatePost() {
   const [formData, setFormData] = useState({
@@ -39,7 +40,7 @@ function CreatePost() {
         data.append("thumbnail", thumbnail);
       }
 
-      await axios.post("/posts/createpost", data, {
+      await api.post("/posts/createpost", data, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",

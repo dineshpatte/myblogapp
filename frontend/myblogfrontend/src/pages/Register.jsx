@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "../api";
+import api from "../api";
+
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -30,7 +32,7 @@ function Register() {
     if (formData.avatar) data.append("avatar", formData.avatar);
 
     try {
-      const res = await axios.post("/users/register", data);
+      const res = await api.post("/users/register", data);
       setMessage("Registered successfully!");
       console.log(res.data);
     } catch (error) {

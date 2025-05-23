@@ -2,6 +2,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "../api";
 import { Menu, X, LogOut } from "lucide-react";
+import api from "../api";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await axios.post("/users/logout");
+      await api.post("/users/logout");
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       setUser(null);

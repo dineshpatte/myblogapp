@@ -1,14 +1,16 @@
+
 import axios from "axios";
 
-const instance = axios.create({
-  baseURL: "http://localhost:3000/api/v1",
+const api = axios.create({
+  baseURL: "https://myblogapp-8rpm.onrender.com/api/v1",
   withCredentials: true,
 });
 
-instance.interceptors.request.use((config) => {
+api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-export default instance;
+export default api;
+

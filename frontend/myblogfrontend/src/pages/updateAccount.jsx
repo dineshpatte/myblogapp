@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "../api";
+import api from "../api";
 
 function UpdateAccount() {
   const [formData, setFormData] = useState({
@@ -22,7 +23,7 @@ function UpdateAccount() {
     }
 
     try {
-      const res = await axios.post("/users/updatedetails", formData);
+      const res = await api.post("/users/updatedetails", formData);
       setMessage("Account details updated successfully!");
     } catch (error) {
       setMessage(
