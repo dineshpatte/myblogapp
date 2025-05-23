@@ -206,6 +206,29 @@ function Home() {
                   Register
                 </button>
               </div>
+
+              <div className="mt-10 max-w-3xl text-center bg-white/5 backdrop-blur-md p-8 rounded-xl shadow-xl border border-white/10">
+  <h2 className="text-2xl font-bold text-white mb-1">Why Join The Paper Quill?</h2>
+  <div className="w-16 h-1 mx-auto bg-[#5a5a5a] rounded mb-6"></div>
+  <ul className="space-y-4 text-left text-lg">
+    {[
+      "Write your own blogs and share your voice",
+      "Explore diverse thoughts and stories by others",
+      "Save your favorite posts to revisit anytime",
+      "Secure and free registration for everyone"
+    ].map((feature, i) => (
+      <li
+        key={i}
+        className="relative pl-6 text-gray-300 hover:text-white transition-colors duration-200"
+      >
+        <span className="absolute left-0 top-1 h-4 w-1 bg-[#5a5a5a] rounded-sm"></span>
+        {feature}
+      </li>
+    ))}
+  </ul>
+</div>
+
+
             </div>
           ) : (
             <>
