@@ -147,32 +147,20 @@ function Home() {
     const storedUser = localStorage.getItem("user");
     if (storedUser) setUser(JSON.parse(storedUser));
   }, []);
+useEffect(() => {
+  if (user) {
+    const fetchArticles = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/news`);
+        setArticles(response.data.articles || response.data); // depending on your backend response structure
+      } catch (error) {
+        console.error("Failed to fetch articles", error);
+      }
+    };
 
-  useEffect(() => {
-    if (user) {
-      const fetchArticles = async () => {
-        try {
-          const response = await axios.get(
-            "https://newsapi.org/v2/top-headlines",
-            {
-              params: {
-                country: "us",
-                category: "entertainment",
-
-                apiKey: "8c866b53ba254aceb2197af70286766b",
-                pageSize: 10,
-              },
-            }
-          );
-          setArticles(response.data.articles);
-        } catch (error) {
-          console.error("Failed to fetch articles", error);
-        }
-      };
-
-      fetchArticles();
-    }
-  }, [user]);
+    fetchArticles();
+  }
+}, [user]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
