@@ -6,7 +6,7 @@ const app = express();
 
 
 app.use(cors({
-  origin: 'https://myblogapp-xr2t.vercel.app/',
+  origin: 'https://myblogapp-xr2t.vercel.app',
   credentials: true,
 }));
 
