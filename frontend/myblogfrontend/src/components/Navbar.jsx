@@ -27,7 +27,7 @@ function Navbar() {
     console.log("Logout token:", token);
 
     await axios.post(
-      "http://localhost:3000/api/v1/users/logout",
+      `${import.meta.env.VITE_BACKEND_URL}/users/logout`,
       {},
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -39,7 +39,7 @@ function Navbar() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
-    navigate("/");
+    navigate("/login");
   } catch (err) {
     console.error("Logout failed", err);
     alert("Logout failed, please try again.");

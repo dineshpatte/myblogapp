@@ -23,7 +23,7 @@ function UpdateAccount() {
     }
 
     try {
-      const res = await axios.post("http://localhost:3000/api/v1/users/updatedetails", formData);
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/users/updatedetails`, formData);
       setMessage("Account details updated successfully!");
     } catch (error) {
       setMessage(

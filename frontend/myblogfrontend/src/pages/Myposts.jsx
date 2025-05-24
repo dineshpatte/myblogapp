@@ -21,7 +21,7 @@ function MyPosts() {
     const token = localStorage.getItem("token");
     console.log(token)
     try {
-      const res = await axios.get("http://localhost:3000/api/v1/posts/getpostbyuserid", {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/posts/getpostbyuserid`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -40,7 +40,7 @@ function MyPosts() {
 
   const fetchComments = async (postId) => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/v1/comments/getcommentsbypost/${postId}`);
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/comments/getcommentsbypost/${postId}`);
       setComments((prev) => ({ ...prev, [postId]: res.data.data || [] }));
     } catch (err) {
       console.error("Failed to fetch comments:", err);
@@ -50,7 +50,7 @@ function MyPosts() {
   const handleDelete = async (postId) => {
     const token = localStorage.getItem("token");
     try {
-      await axios.delete(`http://localhost:3000/api/v1/posts/deletepost/${postId}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/posts/deletepost/${postId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -80,7 +80,7 @@ function MyPosts() {
     const token = localStorage.getItem("token");
 
     try {
-      await api.put(`/posts/updatepost/${editingPost._id}`, editForm, {
+      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/posts/updatepost/${editingPost._id}`, editForm, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

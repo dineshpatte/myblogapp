@@ -16,7 +16,7 @@ function Explore() {
     const fetchPostsAndComments = async () => {
       setLoading(true);
       try {
-        const res = await axios.get("http://localhost:3000/api/v1/posts/getallposts", {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/posts/getallposts`, {
           headers: authHeaders,
           params: { status: "published", page: 1, limit: 50 },
         });
@@ -35,7 +35,7 @@ function Explore() {
           const commentsResults = await Promise.all(
             filteredPosts.map(async (post) => {
               const resComments = await axios.get(
-                `http://localhost:3000/api/v1/comments/getcommentsbypost/${post._id}`,
+                `${import.meta.env.VITE_BACKEND_URL}/comments/getcommentsbypost/${post._id}`,
                 { headers: authHeaders }
               );
               return { postId: post._id, comments: resComments.data.data };
@@ -75,7 +75,7 @@ function Explore() {
 
     try {
       await axios.post(
-        "http://localhost:3000/api/v1/comments/addcomment",
+       ` ${import.meta.env.VITE_BACKEND_URL}/comments/addcomment`,
         {
           content: comment,
           postId,
@@ -90,7 +90,7 @@ function Explore() {
 
       // Refresh comments for this post after adding new one
       const res = await axios.get(
-        `http://localhost:3000/api/v1/comments/getcommentsbypost/${postId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/comments/getcommentsbypost/${postId}`,
         { headers: authHeaders }
       );
       setComments((prev) => ({ ...prev, [postId]: res.data.data }));

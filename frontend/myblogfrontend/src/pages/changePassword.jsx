@@ -13,7 +13,7 @@ function ChangePassword() {
       const token = localStorage.getItem("token");  // get token
 
       const res = await axios.post(
-        "http://localhost:3000/api/v1/users/changepassword",
+        `${import.meta.env.VITE_BACKEND_URL}/users/changepassword`,
         { oldPassword, newPassword },
         {
           headers: { Authorization: `Bearer ${token}` },  // pass token here

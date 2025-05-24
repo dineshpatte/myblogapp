@@ -40,7 +40,7 @@ function CreatePost() {
         data.append("thumbnail", thumbnail);
       }
 
-      await axios.post("http://localhost:3000/api/v1/posts/createpost", data, {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/posts/createpost`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
