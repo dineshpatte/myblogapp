@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CreatePost from "./pages/CreatePost";
-import MyPosts from "./pages/MyPosts";
+import MyPosts from "./pages/Myposts";
 import PostDetails from "./pages/PostDetails";
 import UpdateAccount from "./pages/updateAccount";
 import ChangePassword from "./pages/changePassword";

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../api";
-import api from "../api";
+import axios from "axios"
 
 function Login() {
   const navigate = useNavigate();
@@ -26,24 +25,22 @@ function Login() {
       return;
     }
 
-    try {
-      const res = await api.post("/users/login", formData);
-      setMessage("Login successful!");
-      setLoggedIn(true);
-      localStorage.setItem("token", res.data.token);
-      if (res.data?.data?.user) {
-        localStorage.setItem("user", JSON.stringify(res.data.data.user));
-        navigate("/");
-      } else {
-        setMessage("Login failed. Try again.");
-      }
-    } catch (error) {
-      setMessage(
-        error.response?.data?.message || "Login failed, please try again."
-      );
-      setLoggedIn(false);
-    }
-  };
+ try {
+  const res = await axios.post("http://localhost:3000/api/v1/users/login", formData);
+  localStorage.setItem("token", res.data.data.accessToken);  // <--- Correct path here
+  setMessage("Login successful!");
+  setLoggedIn(true);
+  if (res.data?.data?.user) {
+    localStorage.setItem("user", JSON.stringify(res.data.data.user));
+    navigate("/");
+  } else {
+    setMessage("Login failed. Try again.");
+  }
+} catch (error) {
+  setMessage(error.response?.data?.message || "Login failed, please try again.");
+  setLoggedIn(false);
+}
+  }
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">

@@ -1,8 +1,8 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "../api";
+import axios from "axios";
 import { Menu, X, LogOut } from "lucide-react";
-import api from "../api";
+
 
 function Navbar() {
   const navigate = useNavigate();
@@ -12,6 +12,7 @@ function Navbar() {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
+    console.log(user)
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     } else {
@@ -21,16 +22,32 @@ function Navbar() {
   }, [location]);
 
   const handleLogout = async () => {
-    try {
-      await api.post("/users/logout");
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      setUser(null);
-      navigate("/");
-    } catch (err) {
-      console.error("Logout failed", err);
-    }
-  };
+  try {
+    const token = localStorage.getItem("token");
+    console.log("Logout token:", token);
+
+    await axios.post(
+      "http://localhost:3000/api/v1/users/logout",
+      {},
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        // Removed withCredentials since we're not using cookies here
+      }
+    );
+
+    // Clear local storage and reset user state
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/");
+  } catch (err) {
+    console.error("Logout failed", err);
+    alert("Logout failed, please try again.");
+  }
+};
+
+
+
 
   return (
     <nav className="bg-[#0e0e0e] text-[#c7c7c7] p-4 shadow-md border-b border-[#2e2e2e] font-sans">

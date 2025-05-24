@@ -1,6 +1,5 @@
 import { useState } from "react";
-import axios from "../api";
-import api from "../api";
+import axios from "axios";
 
 function ChangePassword() {
   const [oldPassword, setOldPassword] = useState("");
@@ -11,10 +10,16 @@ function ChangePassword() {
     e.preventDefault();
 
     try {
-      const res = await api.post("/users/changepassword", {
-        oldPassword,
-        newPassword,
-      });
+      const token = localStorage.getItem("token");  // get token
+
+      const res = await axios.post(
+        "http://localhost:3000/api/v1/users/changepassword",
+        { oldPassword, newPassword },
+        {
+          headers: { Authorization: `Bearer ${token}` },  // pass token here
+          // withCredentials: true, // only if you rely on cookies
+        }
+      );
 
       if (res.status === 200) {
         setMessage("Password changed successfully!");
@@ -56,9 +61,7 @@ function ChangePassword() {
         </form>
 
         {message && (
-          <p className="mt-4 text-center font-medium text-green-400">
-            {message}
-          </p>
+          <p className="mt-4 text-center font-medium text-green-400">{message}</p>
         )}
       </div>
     </div>

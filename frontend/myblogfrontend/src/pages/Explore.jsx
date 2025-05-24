@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "../api";
-import api from "../api";
+import axios from "axios";
 
 function Explore() {
   const [posts, setPosts] = useState([]);
@@ -8,11 +7,17 @@ function Explore() {
   const [comments, setComments] = useState({});
   const [newComments, setNewComments] = useState({});
   const [expandedPosts, setExpandedPosts] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const token = localStorage.getItem("token");
+  const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchPostsAndComments = async () => {
+      setLoading(true);
       try {
-        const res = await api.get("/posts/getallposts", {
+        const res = await axios.get("http://localhost:3000/api/v1/posts/getallposts", {
+          headers: authHeaders,
           params: { status: "published", page: 1, limit: 50 },
         });
 
@@ -25,29 +30,40 @@ function Explore() {
             (post) => post.author?._id !== userId && post.thumbnail
           );
           setPosts(filteredPosts);
-          filteredPosts.forEach((post) => fetchComments(post._id));
+
+          // Fetch all comments in parallel for filtered posts
+          const commentsResults = await Promise.all(
+            filteredPosts.map(async (post) => {
+              const resComments = await axios.get(
+                `http://localhost:3000/api/v1/comments/getcommentsbypost/${post._id}`,
+                { headers: authHeaders }
+              );
+              return { postId: post._id, comments: resComments.data.data };
+            })
+          );
+
+          // Build comments object keyed by postId
+          const commentsMap = {};
+          commentsResults.forEach(({ postId, comments }) => {
+            commentsMap[postId] = comments;
+          });
+
+          setComments(commentsMap);
         } else {
           setError("Posts data is not an array");
           setPosts([]);
         }
       } catch (err) {
-        console.error("Error fetching posts:", err);
+        console.error("Error fetching posts and comments:", err);
         setError("Failed to fetch posts.");
         setPosts([]);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchPosts();
-  }, []);
-
-  const fetchComments = async (postId) => {
-    try {
-      const res = await api.get(`/comments/getcommentsbypost/${postId}`);
-      setComments((prev) => ({ ...prev, [postId]: res.data.data }));
-    } catch (err) {
-      console.error("Error fetching comments:", err);
-    }
-  };
+    fetchPostsAndComments();
+  }, []); // empty deps, run once on mount
 
   const handleCommentChange = (postId, value) => {
     setNewComments((prev) => ({ ...prev, [postId]: value }));
@@ -58,12 +74,26 @@ function Explore() {
     if (!comment) return;
 
     try {
-      await api.post("/comments/addcomment", {
-        content: comment,
-        postId,
-      });
+      await axios.post(
+        "http://localhost:3000/api/v1/comments/addcomment",
+        {
+          content: comment,
+          postId,
+        },
+        {
+          headers: authHeaders,
+          withCredentials: true,
+        }
+      );
+
       setNewComments((prev) => ({ ...prev, [postId]: "" }));
-      fetchComments(postId);
+
+      // Refresh comments for this post after adding new one
+      const res = await axios.get(
+        `http://localhost:3000/api/v1/comments/getcommentsbypost/${postId}`,
+        { headers: authHeaders }
+      );
+      setComments((prev) => ({ ...prev, [postId]: res.data.data }));
     } catch (err) {
       console.error("Error adding comment:", err);
     }
@@ -76,11 +106,17 @@ function Explore() {
     }));
   };
 
+  if (loading) {
+    return (
+      <div className="p-6 bg-black min-h-screen flex justify-center items-center text-white">
+        Loading posts...
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 bg-black min-h-screen font-serif text-white">
-      <h2 className="text-3xl font-bold mb-6 text-center text-white">
-        Explore Posts
-      </h2>
+      <h2 className="text-3xl font-bold mb-6 text-center text-white">Explore Posts</h2>
 
       {error && <p className="text-red-400 mb-4 text-center">{error}</p>}
 
@@ -99,16 +135,11 @@ function Explore() {
             <h3 className="text-xl font-bold text-white mb-1">{post.title}</h3>
 
             <p className="text-sm text-gray-400 mb-2 italic">
-              By{" "}
-              <span className="font-semibold text-gray-200">
-                {post.author?.username}
-              </span>
+              By <span className="font-semibold text-gray-200">{post.author?.username}</span>
             </p>
 
             <p className="text-gray-200 text-sm mb-3 whitespace-pre-line">
-              {expandedPosts[post._id]
-                ? post.content
-                : post.content.slice(0, 100) + "..."}
+              {expandedPosts[post._id] ? post.content : post.content.slice(0, 100) + "..."}
             </p>
 
             <button
@@ -132,10 +163,8 @@ function Explore() {
               Submit
             </button>
 
-            <div className="bg-[#111] mt-4 border-t border-gray-700 pt-3 px-6 py-4">
-              <h4 className="text-sm font-semibold mb-2 text-white">
-                🗨 Comments
-              </h4>
+            <div className="bg-[#111] mt-4 border-t border-gray-700 pt-3 px-6 py-4 max-h-40 overflow-y-auto">
+              <h4 className="text-sm font-semibold mb-2 text-white">🗨 Comments</h4>
               {comments[post._id]?.length > 0 ? (
                 comments[post._id].map((comment) => (
                   <div key={comment._id} className="text-sm text-gray-300 mb-2">
